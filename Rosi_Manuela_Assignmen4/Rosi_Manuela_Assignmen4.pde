@@ -1,9 +1,10 @@
 float heat = 50;
-float coolant = 100;
+float coolantMax = 100;
+float coolant = 80;
+
 
 void setup() {
   size(400,400);
-  rectMode (CENTER);
   ellipseMode (CENTER);
 }
 
@@ -11,7 +12,10 @@ void draw(){
   background (165);
   
   heat += 0.6;
-  coolant += 0.95;
+  coolant += 0.01;
+  
+  coolant = constrain(coolant, 0, coolantMax);
+  heat = constrain(heat, 0, 245);
   
   //valve coolant ADD PIMAGE FOR IT, SPRITES TO SHOW IT ROTATING 
   stroke(0, 63, 232);
@@ -27,20 +31,21 @@ void draw(){
   //furnace
   noStroke ();
   fill(255);
-  rect (200, 330, 240, 220);
+  rect(80, 220, 240, 220);
   ellipse(200, 230, 240, 200);
+  
+   //temp - how can I make it constrained to the thermometer and how can I make it 
+  //activate the stability while only insde the thermometer?
+  fill(255, 0, 0);
+  rect(355, 377 - heat, 10, heat);
   
   //thermometer
   stroke(0);
   strokeWeight(2);
   fill(150, 150, 150, 80);
-  rect(360, 270, 15, 220);
+  rect(352, 160, 15, 220);
   ellipse( 360, 145, 40, 40);
   
-  //temp - how can I make it constrained to the thermometer and how can I make it 
-  //activate the stability while only insde the thermometer?
-  fill(255, 0, 0);
-  rect(360, 360, 15, heat);
   
   strokeWeight(5);
   stroke(255, 0, 0);
@@ -51,23 +56,41 @@ void draw(){
   //green range
   noStroke();
   fill(0, 255, 0, 200);
-  rect(360, 265, 15, 50);
+  rect(352, 240, 15, 50);
   
   //coolant
   noStroke();
   fill( 0, 0, 255);
-  rect(60, 200, 10, coolant);
+  rect(55, 210 -coolant, 10, coolant);
 }
 
 void keyPressed(){
   heat -= 10;
   coolant -=30;
+  
+  heat = constrain(heat, 0, 245);
+  coolant = constrain(coolant, 0, coolantMax);
+  
+  if(coolant > 30){
+    heat -= 10;
+    coolant -= 30;
+  }
 }
 
 void mousePressed(){
   heat -= 30;
   coolant -= 70;
+
+  heat = constrain(heat, 0, 245);
+  coolant = constrain(coolant, 0, coolantMax);
+  
+   if(coolant > 70){
+    heat -= 10;
+    coolant -= 30;
+  }
 }
+
+
 
   //ises so far- 
   //A- the coolant and the temp lines when they reach a minimum size they are invertin directions meaning they are decreasing each frame 
