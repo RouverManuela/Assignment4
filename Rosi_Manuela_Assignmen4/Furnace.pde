@@ -16,7 +16,7 @@ class Furnace {
   float refillRate = 0.35;
 
   float coolantA = 7;
-  float coolantD = 16;
+  float coolantD = 20;
   float costA = 6;
   float costD = 18;
 
@@ -46,24 +46,21 @@ class Furnace {
     valveHeld = false;
 
     if (heatSurge == false) {
-      if(random(1) < 0.005){
-      heatSurge = true;
-      surgeTimer = 90;
-    }
-    }
-    if (heatSurge == true) {
-      heat += 0.2;
-      surgeTimer --;
-
-      fill(255, 0, 0);
-      stroke (0);
-      strokeWeight (2);
-      ellipse(200, 125, 20, 26);
-
-      if (surgeTimer <=0) {
-        heatSurge = false;
+      if (random(1) < 0.003) {
+        heatSurge = true;
+        surgeTimer = 180;
+        println("SURGE ON");
       }
     }
+    if (heatSurge == true) {
+      heat += 0.3;
+      surgeTimer --;
+    }
+    if (heatSurge == true && surgeTimer <=0) {
+      heatSurge = false;
+      println("SURGE ON");
+    }
+
 
     if (mousePressed && dist(mouseX, mouseY, valveMiddle.x, valveMiddle.y) < 30 ) {
       valveHeld = true;
@@ -110,6 +107,17 @@ class Furnace {
 
   void display() {
 
+    //warning light
+    stroke (0);
+    strokeWeight (2);
+    if (heatSurge == true) {
+      fill(255, 0, 0);
+    } else {
+      fill(50);
+    }
+    ellipse(200, 125, 20, 26);
+   
+
     for (int i = 0; i < 4; i++) {
       if (i < stabilityCount) {
         fill(255, 255, 0);
@@ -131,11 +139,7 @@ class Furnace {
     line(60, 30, 60, 90);
     line(30, 60, 90, 60);
 
-    //warning light
-    fill(50);
-    stroke (0);
-    strokeWeight (2);
-    ellipse(200, 125, 20, 26);
+  
 
     //furnace
     noStroke ();
@@ -180,6 +184,33 @@ class Furnace {
     fill(180, 0, 255);
     float stabilityWidth = map(stability, 0, stabilityMax, 0, 160);
     rect(110, 30, stabilityWidth, 12);
+    
+    //more heat surge effects
+    noStroke();
+    if (heatSurge == true) {
+      fill(255, 0, 0, frameCount%65);
+    } else {
+      noFill();
+    }
+    rect(0, 0, width, height);
+    noStroke();
+    if (heatSurge == true){
+      fill(255);
+    }else{
+      noFill();
+    }
+     ellipse(200, 126, 4, 4);
+     
+      if (heatSurge == true){
+      fill(255, 0, 0, 50);
+    }else{
+      noFill();
+    }
+     ellipse(200, 126, 30, 30);
+     ellipse(200, 126, 80, 80);
+     ellipse(200, 126, 130, 130);
+     
+     
 
 
     //simulation of win screen
