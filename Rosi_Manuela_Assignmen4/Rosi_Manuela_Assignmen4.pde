@@ -13,9 +13,9 @@ void setup() {
   //ArrayList that will hold the ashes
   ashes= new ArrayList<Ash>();
 
-//create 15 ash particles
+  //create 15 ash particles
   for (int i = 0; i < 15; i++) {
-    //Random starting pt for each 
+    //Random starting pt for each
     float x = random(10, 380);
     float y = random(380, 460);
     //New ash obj add to arrayList
@@ -34,11 +34,11 @@ void draw() {
 
   furnace.update();
   furnace.display();
-//Loop through every ash obj in ArrayList
+  //Loop through every ash obj in ArrayList
   for ( int i = 0; i < ashes.size(); i++) {
     Ash a = ashes.get(i);
-//If the heat is above the safe/green zone max
-//turn the ash into the scorching state, otherwise keep it as is
+    //If the heat is above the safe/green zone max
+    //turn the ash into the scorching state, otherwise keep it as is
     if (furnace.heat > furnace.safeMax) {
       a.scorching = true;
     } else {
@@ -55,7 +55,7 @@ void keyPressed() {
     startScreen = false;
     return;
   }
-//triggers regular coolant 
+  //triggers regular coolant
   if (key == 'a' || key == 'A') {
     furnace.regCoolant();
   }
@@ -63,7 +63,7 @@ void keyPressed() {
   if (key == 'd' || key == 'D') {
     furnace.largeCoolant();
   }
-  //press r to restart when you get lose or win screen 
+  //press r to restart when you get lose or win screen
   if (furnace.winScreen == true || furnace.loseScreen == true) {
     if (key == 'r' ||key == 'R') {
       furnace.restart();

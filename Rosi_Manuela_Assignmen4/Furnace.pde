@@ -2,51 +2,54 @@ class Furnace {
   //just the center of the blue valve to check if the mouse is holding it.
   PVector valveMiddle;
 
-//the values fo the heat, the 110 is the initial value and the max is the maximum value it can reach 
+  //the values fo the heat, the 110 is the initial value and the max is the maximum value it can reach
   float heat = 110;
   float heatMax = 242;
-//Same logic applies (stability included)
+  //Same logic applies (stability included)
   float coolant = 60;
   float coolantMax = 100;
 
   float stability = 0;
   float stabilityMax = 100;
-//the rates by which the coolant and heat go up or down every frame 
+  //the rates by which the coolant and heat go up or down every frame
   float heatRate = 0.18;
   float coolantRate = 0.35;
   float refillRate = 0.4;
 
-//theseare the values of the A dn D keys. the a releases the normal amount of coolant which then subtracts from th coolant, while the D releases extra coolant. 
+  //theseare the values of the A dn D keys. the a releases the normal amount of coolant which then subtracts from th coolant, while the D releases extra coolant.
+  //it was a bit hard to find a value for these two that would not make the game either impossible or too easy ToT but I think it is balanced now lol
   float coolantA = 7;
   float coolantD = 20;
   float costA = 6;
   float costD = 18;
-//this is the range of the green/safe range
+  //this is the range of the green/safe range
   float safeMin = 90;
   float safeMax = 140;
-
+  //stability (purple bar) how much ypou lose when in the green area and how much you lose when beyond the green
   float stabilityGain = 0.14;
   float stabilityLoss = 0.05;
-
+  //how many yellow or red lights are going to light up
+  //Borrowed this idea from the cool ship example prof Barry showed us :]
   int stabilityCount = 0;
   int stabilityGoal = 4;
   int failCount = 0;
   int failMax = 4;
 
-  boolean valveHeld = false;
-  boolean winScreen = false;
-  boolean loseScreen = false;
-  boolean heatSurge = false;
-  boolean meltdown = false;
+  boolean valveHeld = false; //for the refill, check if valve is being pressed
+  //what end screen will show
+  boolean winScreen = false;///
+  boolean loseScreen = false;//
+  ////////////////////////////
+  boolean heatSurge = false; //check if the heat surge is active
+  boolean meltdown = false;//check if meltdown is active
 
+  //how long surge lasts
   int surgeTimer = 0;
-
-
-
+  //Constructor for the valve position when furnace is created
   Furnace() {
     valveMiddle = new PVector (60, 60);
   }
-
+  //draw the start screen
   void displayStartScreen() {
     background(234, 232, 232, 150);
     fill(0);
@@ -64,14 +67,14 @@ class Furnace {
 
 
   void update() {
+    //heat rises every frame
     heat += heatRate;
-
+    //reset valve every frame
     valveHeld = false;
-
+    //if furnace overheats count one fail and rest all values***
     if (heat >= heatMax && meltdown == false) {
       failCount ++;
       meltdown = true;
-
       heat = 110;
       coolant = 60;
       stability = 0;
@@ -80,48 +83,50 @@ class Furnace {
     if (heat < heatMax) {
       meltdown = false;
     }
-
+    //randomly start a heat surge, the random range is suuuuper tiny so it wont happen as often
     if (heatSurge == false) {
-      if (random(1) < 0.001) {
+      if (random(1) < 0.002) {
         heatSurge = true;
         surgeTimer = 180;
         println("SURGE ON");
       }
     }
+    //While surge is acrtive add extra heat and count down timer
     if (heatSurge == true) {
       heat += 0.3;
       surgeTimer --;
     }
+    //when surge timer ends, stop surge
     if (heatSurge == true && surgeTimer <=0) {
       heatSurge = false;
       println("SURGE ON");
     }
-
-
+    //check if player is holding the valve
     if (mousePressed && dist(mouseX, mouseY, valveMiddle.x, valveMiddle.y) < 30 ) {
       valveHeld = true;
     }
+    //if yes - refill coolant (blue bar)
     if (valveHeld == true) {
       coolant += refillRate;
     }
-
+    //keep the limits
     coolant = constrain(coolant, 0, coolantMax);
     heat = constrain(heat, 0, heatMax);
-
+    //if inside green zone gain stability (purble bar) add, if outside, subtract
     if (heat >= safeMin && heat <= safeMax) {
       stability += stabilityGain;
     } else {
       stability -= stabilityLoss;
     }
     stability = constrain(stability, 0, stabilityMax);
-
+    //add one yellow light player need 4 to win
     if (stability >= stabilityMax) {
       stabilityCount++;
       stability = 0;
     }
     stabilityCount = constrain(stabilityCount, 0, stabilityGoal);
   }
-
+  //regular coolant axction used by 'a' key
   void regCoolant() {
     if (valveHeld == false && coolant >= costA) {
       heat -= coolantA;
@@ -130,7 +135,8 @@ class Furnace {
     coolant = constrain(coolant, 0, coolantMax);
     heat = constrain(heat, 0, heatMax);
   }
-
+  //bonus coolant by 'd' key
+  //also ends heat surge
   void largeCoolant() {
     if (valveHeld == false && coolant>=costD) {
       heat -= coolantD;
@@ -188,8 +194,7 @@ class Furnace {
     rect(80, 220, 240, 220);
     ellipse(200, 230, 240, 200);
 
-    //temp - how can I make it constrained to the thermometer and how can I make it
-    //activate the stability while only insde the thermometer?
+    //temp
     fill(255, 0, 0);
     rect(355, 377 - heat, 10, heat);
 
@@ -225,7 +230,7 @@ class Furnace {
     float stabilityWidth = map(stability, 0, stabilityMax, 0, 160);
     rect(110, 30, stabilityWidth, 12);
 
-    //more heat surge effects
+    //more heat surge effects - filter and light
     noStroke();
     if (heatSurge == true) {
       fill(255, 0, 0, frameCount%65);
@@ -253,7 +258,7 @@ class Furnace {
 
 
 
-    //simulation of win screen
+    //win screen
     if (stabilityCount >= stabilityGoal) {
       winScreen = true;
     }
@@ -277,12 +282,12 @@ class Furnace {
       fill(0);
       textAlign (CENTER, CENTER);
       textSize(25);
-      text("womp womp, you lose", width/2, 200);
+      text("womp womp, you lose", width/2, 200); //haha LLLLLLLLL
       text("Press R to restart", width/2, 280);
     }
   }
 
-
+  //this restarts the game upon pressin the 'r' key as established in the main tab :]
   void restart() {
     heat = 110;
     coolant = 60;

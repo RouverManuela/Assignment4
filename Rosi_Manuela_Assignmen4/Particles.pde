@@ -2,10 +2,9 @@ class Ash {
   PVector pos;
   PVector velocity;
   PVector acceleration;
-
+//check if it is the heat surge event or not
   boolean scorching = false;
-
-
+//values for the movements
   float maxSpeed = 1;
   float swayStrength = 0.03;
   float mouseRadius = 60;
@@ -26,14 +25,14 @@ class Ash {
     PVector sway = new PVector (random(-swayStrength, swayStrength), 0);
     acceleration.add(sway);
 
-    //mouse interaction
+    //mouse interaction - move away slightly from the mouse for a cool effect 
     PVector mousePos = new PVector(mouseX, mouseY);
     PVector away = PVector.sub(pos, mousePos);
-    float ew = away.mag();
+    float ew = away.mag(); //ew get away from me
 
     if (ew < mouseRadius) {
       away.normalize();
-      away.mult(0.08);
+      away.mult(0.1);
       acceleration.add(away);
     }
     velocity.add(acceleration);
@@ -48,7 +47,7 @@ class Ash {
 
   void display () {
     noStroke();
-
+//if the furnace is too hot the ash becomes orange otherwise it stays grey 
     if (scorching == true) {
       fill(255, 120, 0, 90);
     } else {
