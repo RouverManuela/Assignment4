@@ -54,10 +54,9 @@ void keyPressed() {
   if (key == 'd' || key == 'D') {
     furnace.largeCoolant();
   }
-  if ((key == 'r' || key == 'R') && furnace.winScreen == true){
+  if ((key == 'r' || key == 'R') && (furnace.winScreen == true || furnace.loseScreen == true)){
     furnace.restart();
+    startScreen = true;
+    return;
   }
-   if ((key == 'r' || key == 'R') && furnace.loseScreen == true) {
-    furnace.restart();
-   }
 }

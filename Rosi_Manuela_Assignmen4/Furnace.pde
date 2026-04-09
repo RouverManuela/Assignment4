@@ -25,7 +25,7 @@ class Furnace {
 
   float stabilityGain = 0.14;
   float stabilityLoss = 0.05;
-  
+
   int stabilityCount = 0;
   int stabilityGoal = 4;
   int failCount = 0;
@@ -53,7 +53,7 @@ class Furnace {
     text("PRESS A & D TO CONTROL HEAT", width/2, 120);
     text("STAY WITHIN THE GREEN AREA", width/2, 148);
     textSize(18);
-    fill (0, 0,255);
+    fill (0, 0, 255);
     text("!!Hold the BLUE VALVE to refill coolant", width/2, 190);
     textSize(20);
     fill(188, 28, 28);
@@ -198,12 +198,11 @@ class Furnace {
     rect(352, 160, 15, 220);
     ellipse( 360, 145, 40, 40);
 
-
+//red line represents the heat max
     strokeWeight(5);
     stroke(255, 0, 0);
     line(335, 135, 360, 135);
-    stroke(0, 0, 255);
-    line(335, 370, 360, 370);
+   
 
     //green range
     noStroke();
@@ -287,6 +286,12 @@ class Furnace {
     coolant = 60;
     stability = 0;
     stabilityCount = 0;
+    failCount= 0;
+    heatSurge = false;
+    valveHeld = false;
+    
+    surgeTimer = 0;
+
     winScreen = false;
     loseScreen = false;
   }
