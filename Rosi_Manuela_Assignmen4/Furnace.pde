@@ -27,10 +27,14 @@ class Furnace {
   float stabilityLoss = 0.05;
   int stabilityCount = 0;
   int stabilityGoal = 4;
+  int failCount = 0;
+  int failMax = 4;
 
   boolean valveHeld = false;
   boolean winScreen = false;
+  boolean loseScreen = false;
   boolean heatSurge = false;
+  boolean meltdown = false;
 
   int surgeTimer = 0;
 
@@ -40,13 +44,39 @@ class Furnace {
     valveMiddle = new PVector (60, 60);
   }
 
+  void displayStartScreen() {
+    background(234, 232, 232, 150);
+    fill(0);
+    textAlign (CENTER, CENTER);
+    textSize(25);
+    text("PRESS A & D TO CONTROL HEAT", width/2, 120);
+    text("STAY WITHIN THE GREEN AREA", width/2, 148); 
+    textSize(20);
+    fill(188, 28, 28);
+    text("press any button to start", width/2, 200);
+  }
+
+
   void update() {
     heat += heatRate;
 
     valveHeld = false;
+    
+    if (heat >= heatMax && meltdown == false){
+      failCount ++;
+      meltdown = true;
+      
+      heat = 110;
+      coolant = 60;
+      stability = 0;
+      heatSurge = false;
+    }
+    if(heat < heatMax){
+      meltdown = false;
+    }
 
     if (heatSurge == false) {
-      if (random(1) < 0.003) {
+      if (random(1) < 0.001) {
         heatSurge = true;
         surgeTimer = 180;
         println("SURGE ON");
@@ -116,10 +146,15 @@ class Furnace {
       fill(50);
     }
     ellipse(200, 125, 20, 26);
-   
-
+    
+    //fail and win lights
     for (int i = 0; i < 4; i++) {
-      if (i < stabilityCount) {
+      //fail lights
+      if (i < failCount){
+        fill(255, 0, 0);
+      }
+      //win lights
+      else if (i < stabilityCount) {
         fill(255, 255, 0);
       } else {
         fill(80);
@@ -139,7 +174,7 @@ class Furnace {
     line(60, 30, 60, 90);
     line(30, 60, 90, 60);
 
-  
+
 
     //furnace
     noStroke ();
@@ -184,7 +219,7 @@ class Furnace {
     fill(180, 0, 255);
     float stabilityWidth = map(stability, 0, stabilityMax, 0, 160);
     rect(110, 30, stabilityWidth, 12);
-    
+
     //more heat surge effects
     noStroke();
     if (heatSurge == true) {
@@ -194,23 +229,23 @@ class Furnace {
     }
     rect(0, 0, width, height);
     noStroke();
-    if (heatSurge == true){
+    if (heatSurge == true) {
       fill(255);
-    }else{
+    } else {
       noFill();
     }
-     ellipse(200, 126, 4, 4);
-     
-      if (heatSurge == true){
+    ellipse(200, 126, 4, 4);
+
+    if (heatSurge == true) {
       fill(255, 0, 0, 50);
-    }else{
+    } else {
       noFill();
     }
-     ellipse(200, 126, 30, 30);
-     ellipse(200, 126, 80, 80);
-     ellipse(200, 126, 130, 130);
-     
-     
+    ellipse(200, 126, 30, 30);
+    ellipse(200, 126, 80, 80);
+    ellipse(200, 126, 130, 130);
+
+
 
 
     //simulation of win screen
@@ -219,6 +254,15 @@ class Furnace {
     }
     if (winScreen == true) {
       fill(19, 160, 76);
+      rect(0, 0, width, height);
+    }
+
+    //lose screen
+    if (failCount >= failMax) {
+      loseScreen = true;
+    }
+    if (loseScreen == true) {
+      fill(188, 28, 28);
       rect(0, 0, width, height);
     }
   }
@@ -230,5 +274,6 @@ class Furnace {
     stability = 0;
     stabilityCount = 0;
     winScreen = false;
+    loseScreen = false;
   }
 }
