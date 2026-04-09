@@ -1,25 +1,27 @@
 class Furnace {
+  //just the center of the blue valve to check if the mouse is holding it.
   PVector valveMiddle;
 
+//the values fo the heat, the 110 is the initial value and the max is the maximum value it can reach 
   float heat = 110;
   float heatMax = 242;
-
+//Same logic applies (stability included)
   float coolant = 60;
   float coolantMax = 100;
 
   float stability = 0;
   float stabilityMax = 100;
-
+//the rates by which the coolant and heat go up or down every frame 
   float heatRate = 0.18;
   float coolantRate = 0.35;
+  float refillRate = 0.4;
 
-  float refillRate = 0.35;
-
+//theseare the values of the A dn D keys. the a releases the normal amount of coolant which then subtracts from th coolant, while the D releases extra coolant. 
   float coolantA = 7;
   float coolantD = 20;
   float costA = 6;
   float costD = 18;
-
+//this is the range of the green/safe range
   float safeMin = 90;
   float safeMax = 140;
 
@@ -198,11 +200,11 @@ class Furnace {
     rect(352, 160, 15, 220);
     ellipse( 360, 145, 40, 40);
 
-//red line represents the heat max
+    //red line represents the heat max
     strokeWeight(5);
     stroke(255, 0, 0);
     line(335, 135, 360, 135);
-   
+
 
     //green range
     noStroke();
@@ -289,7 +291,7 @@ class Furnace {
     failCount= 0;
     heatSurge = false;
     valveHeld = false;
-    
+
     surgeTimer = 0;
 
     winScreen = false;
