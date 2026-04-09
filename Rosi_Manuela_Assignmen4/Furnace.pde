@@ -25,6 +25,7 @@ class Furnace {
 
   float stabilityGain = 0.14;
   float stabilityLoss = 0.05;
+  
   int stabilityCount = 0;
   int stabilityGoal = 4;
   int failCount = 0;
@@ -50,10 +51,13 @@ class Furnace {
     textAlign (CENTER, CENTER);
     textSize(25);
     text("PRESS A & D TO CONTROL HEAT", width/2, 120);
-    text("STAY WITHIN THE GREEN AREA", width/2, 148); 
+    text("STAY WITHIN THE GREEN AREA", width/2, 148);
+    textSize(18);
+    fill (0, 0,255);
+    text("!!Hold the BLUE VALVE to refill coolant", width/2, 190);
     textSize(20);
     fill(188, 28, 28);
-    text("press any button to start", width/2, 200);
+    text("press any button to start", width/2, 280);
   }
 
 
@@ -61,17 +65,17 @@ class Furnace {
     heat += heatRate;
 
     valveHeld = false;
-    
-    if (heat >= heatMax && meltdown == false){
+
+    if (heat >= heatMax && meltdown == false) {
       failCount ++;
       meltdown = true;
-      
+
       heat = 110;
       coolant = 60;
       stability = 0;
       heatSurge = false;
     }
-    if(heat < heatMax){
+    if (heat < heatMax) {
       meltdown = false;
     }
 
@@ -146,11 +150,11 @@ class Furnace {
       fill(50);
     }
     ellipse(200, 125, 20, 26);
-    
+
     //fail and win lights
     for (int i = 0; i < 4; i++) {
       //fail lights
-      if (i < failCount){
+      if (i < failCount) {
         fill(255, 0, 0);
       }
       //win lights
@@ -163,7 +167,7 @@ class Furnace {
       ellipse(120 + i *25, 70, 15, 15);
     }
 
-    //valve coolant ADD PIMAGE FOR IT, SPRITES TO SHOW IT ROTATING
+    //valve coolant
     stroke(0, 63, 232);
     strokeWeight(8);
     noFill();
@@ -255,6 +259,11 @@ class Furnace {
     if (winScreen == true) {
       fill(19, 160, 76);
       rect(0, 0, width, height);
+      fill(0);
+      textAlign (CENTER, CENTER);
+      textSize(25);
+      text("Congrats, you win", width/2, 200);
+      text("Press R to restart", width/2, 280);
     }
 
     //lose screen
@@ -264,6 +273,11 @@ class Furnace {
     if (loseScreen == true) {
       fill(188, 28, 28);
       rect(0, 0, width, height);
+      fill(0);
+      textAlign (CENTER, CENTER);
+      textSize(25);
+      text("womp womp, you lose", width/2, 200);
+      text("Press R to restart", width/2, 280);
     }
   }
 
